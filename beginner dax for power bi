@@ -1,0 +1,247 @@
+
+dev.to
+DEV Community
+6–8 minutes
+
+    “This can’t be real data… right?” 😅
+
+Welcome to real-world of analytics.
+
+In this , we’ll walk through how data analysts actually work with Power BI — from messy data, to cleaning, to writing DAX, to building dashboards that are clear and understandable.
+
+By the end, you’ll understand the full workflow and be able to build your own simple Power BI report with confidence.
+The Analytics Workflow (Big Picture)
+
+Most Power BI projects follow this flow:
+
+Raw Data → Cleaning (Power Query) → Data Model → DAX Measures → Dashboards → Decisions
+
+📊 Visual Flow Diagram (Conceptual)
+
+[ Excel / CSV / SQL / APIs ]
+            |
+            v
+       [ Power Query ]
+            |
+            v
+       [ Data Model ]
+            |
+            v
+            [ DAX ]
+            |
+            v
+       [ Dashboards ]
+            |
+            v
+     [ Business Actions ]
+
+Step 1: Load Messy Data into Power BI
+
+In the real world, data usually comes with problems:
+
+    ❌ Duplicate rows
+    ❌ Blank values
+    ❌ Wrong data types (numbers stored as text)
+    ❌ Inconsistent column names
+    ❌ Multiple date formats
+
+How to Load Data
+
+In Power BI Desktop:
+
+    Click Home → Get Data
+    Choose Excel / CSV / SQL Server
+    Click Transform Data (don’t click Load yet)
+
+This opens Power Query, where cleaning happens.
+Step 2: Clean and Prepare Data (Power Query)
+
+Power Query is your staging area.
+Anything you fix here becomes repeatable and automatic.
+Common Cleaning Tasks
+Problem 	Power Query Fix
+Duplicates 	Remove Rows → Remove Duplicates
+Text with spaces 	Transform → Format → Trim
+Wrong data type 	Change column type
+Messy column names 	Rename columns
+Null values 	Replace values / Filter
+Example
+
+Before
+
+Customer   | Sales     | Order Date
+ John Doe  | "1,000"   | 02/01/24
+ John Doe  | "1000 "   | 2024-01-02
+
+After
+
+Customer  | Sales | Order Date
+John Doe  | 1000  | 2024-01-02
+
+Step 3: Create a Proper Data Model
+
+A good data model = better performance + easier DAX.
+Typical Tables
+
+    Sales (fact table)
+    Customers
+    Products
+    Date (calendar table)
+
+Star Schema (Recommended)
+
+Customers ──┐
+            ├── Sales ── Date
+Products ───┘
+
+Modeling Best Practices
+
+    ✅ One fact table, multiple dimension tables
+    ✅ One-direction relationships
+    ✅ Always use a Date table
+    ❌ Avoid many-to-many unless necessary
+
+Your DAX calculations depend on relationships to filter data correctly.
+Step 4: Write DAX Measures (Beginner → Technical)
+
+DAX = Data Analysis Expressions
+This is how Power BI calculates metrics.
+Start Simple
+
+Total Sales =
+SUM(Sales[Amount])
+
+Total Orders =
+COUNTROWS(Sales)
+
+Total Customers =
+DISTINCTCOUNT(Customers[CustomerID])
+
+Slightly More Technical: Time Intelligence
+
+Sales MTD =
+CALCULATE(
+    [Total Sales],
+    DATESMTD('Date'[Date])
+)
+
+Sales Last Month =
+CALCULATE(
+    [Total Sales],
+    DATEADD('Date'[Date], -1, MONTH)
+)
+
+MoM Growth % =
+DIVIDE(
+    [Sales MTD] - [Sales Last Month],
+    [Sales Last Month]
+)
+
+DAX hack Tips:
+
+    Use measures, not calculated columns
+    Always create a Date table for time intelligence
+    Use DIVIDE() instead of / to avoid errors
+    Build and test one measure at a time
+
+Step 5: Build Dashboards That Answer Questions
+
+A good dashboard answers:
+
+    What is happening?
+    How is it trending?
+    Where should we act?
+
+Example Layout
+
++----------------------------------+
+| KPI Cards: Sales, Orders, Growth |
++----------------------------------+
+| Sales Trend (Line Chart)         |
++----------------------------------+
+| Sales by Product | Sales by City |
++----------------------------------+
+| Filters (Date, Region)           |
++----------------------------------+
+
+Visual Best Practices
+
+    KPI Cards → summary metrics
+    Line charts → trends
+    Bar charts → comparisons
+    Slicers → user interaction
+    Keep colors simple and consiste
+
+    If your dashboard needs explaining, it’s probably too complex.
+
+Step 6: Turn Insights into Action
+
+Dashboards are only useful when they change behavior.
+Example
+
+📉 Sales drop in Nairobi
+➡️ Filter by product
+➡️ Identify stock-outs
+➡️ Fix supply chain
+➡️ Sales recover
+
+This is where data becomes impact.
+Hands-On Practice
+Exercise 1: Data Cleaning
+
+    Remove duplicates
+    Fix data types
+    Rename columns
+    Remove null rows
+
+Exercise 2: DAX Measures
+
+Total Sales = SUM(Sales[Amount])
+Total Orders = COUNTROWS(Sales)
+Average Order Value = DIVIDE([Total Sales], [Total Orders])
+
+Exercise 3: Dashboard
+
+Build:
+
+    1 KPI card
+    1 trend chart
+    1 bar chart
+    1 slicer
+
+Power BI + DAX Cheat Sheet
+Power Query
+Task 	Action
+Remove duplicates 	Home → Remove Rows
+Change data type 	Column header
+Trim spaces 	Transform → Format → Trim
+Split column 	Transform → Split Column
+DAX
+Goal 	Function
+Sum values 	SUM()
+Count rows 	COUNTROWS()
+Distinct count 	DISTINCTCOUNT()
+Apply filters 	CALCULATE()
+Time intelligence 	DATESMTD(), DATEADD()
+Safe division 	DIVIDE()
+Modeling
+
+    Use a Date table
+    Prefer star schema
+    Avoid bi-directional filters unless needed
+
+lessons learnt so far.
+
+Power BI is not about making pretty charts.
+It’s about building reliable data pipelines that lead to better decisions.
+
+The real skill is not just DAX or visuals —
+it’s knowing what question the business is trying to answer.
+
+If you’re new to Power BI:
+
+    Start messy
+    Build small
+    Improve one step at a time
+
+You’re doing real analytics when your data isn’t perfect
